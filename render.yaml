@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: study-helper-backend
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DB_PATH
+        value: /opt/render/project/src/study.db
+      - key: GEMINI_API_KEY
+        value: your_gemini_api_key_here
+    healthCheckPath: /api/health
+    autoDeploy: true

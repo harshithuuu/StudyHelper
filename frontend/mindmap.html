@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mind Maps - Study Helper</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/cytoscape@3.26.0/dist/cytoscape.min.js"></script>
+    <script src="https://unpkg.com/dagre@0.8.5/dist/dagre.min.js" onerror="loadDagreFallback()"></script>
+    <script>
+        function loadDagreFallback() {
+            console.warn('Primary dagre CDN failed, trying fallback...');
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/dagre@0.8.5/dist/dagre.min.js';
+            script.onload = function() {
+                console.log('Dagre library loaded from fallback CDN');
+                checkDagreStatus();
+            };
+            script.onerror = function() {
+                console.warn('JSDelivr CDN failed, trying cdnjs...');
+                const script2 = document.createElement('script');
+                script2.src = 'https://cdnjs.cloudflare.com/ajax/libs/dagre/0.8.5/dagre.min.js';
+                script2.onload = function() {
+                    console.log('Dagre library loaded from cdnjs CDN');
+                    checkDagreStatus();
+                };
+                script2.onerror = function() {
+                    console.error('All dagre CDN sources failed');
+                    checkDagreStatus();
+                };
+                document.head.appendChild(script2);
+            };
+            document.head.appendChild(script);
+        }
+
+        function checkDagreStatus() {
+            if (typeof dagre === 'undefined') {
+                console.error('Dagre library failed to load from all sources');
+            } else {
+                console.log('Dagre library loaded successfully');
+            }
+        }
+
+        // Check initial load
+        if (typeof dagre === 'undefined') {
+            // If not loaded immediately, wait a bit and check again
+            setTimeout(checkDagreStatus, 100);
+        } else {
+            checkDagreStatus();
+        }
+    </script>
+    <script src="https://unpkg.com/cytoscape-dagre@2.5.0/cytoscape-dagre.js"></script>
+    <script>
+        // Verify cytoscape-dagre loaded properly
+        if (typeof cytoscape !== 'undefined' && cytoscape.use) {
+            console.log('Cytoscape and cytoscape-dagre loaded successfully');
+        } else {
+            console.error('Cytoscape or cytoscape-dagre failed to load');
+        }
+    </script>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <!-- Navigation -->
+    <div id="navbar-container"></div>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                <i class="fas fa-project-diagram text-primary-600 mr-3"></i>
+                Mind Map Generator
+            </h1>
+            <p class="text-gray-600 dark:text-gray-400">Transform your text into visual mind maps for better understanding and retention.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Input Section -->
+            <div class="space-y-6">
+                <!-- Text Input -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                        <i class="fas fa-edit mr-2 text-primary-600"></i>
+                        Input Text
+                    </h2>
+                    <textarea 
+                        id="mindmapInput" 
+                        placeholder="Enter your text or notes here to generate a mind map..."
+                        class="w-full h-64 p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
+                    ></textarea>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                        <i class="fas fa-magic mr-2 text-primary-600"></i>
+                        Generate Mind Map
+                    </h2>
+                    <div class="space-y-3">
+                        <button 
+                            id="generateMindmapBtn" 
+                            class="w-full flex items-center justify-center space-x-2 px-4 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <i class="fas fa-project-diagram"></i>
+                            <span>Generate Mind Map</span>
+                        </button>
+                        <button 
+                            id="clearMindmapBtn" 
+                            class="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                        >
+                            <i class="fas fa-trash"></i>
+                            <span>Clear</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Recent Mind Maps -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                        <i class="fas fa-history mr-2 text-primary-600"></i>
+                        Recent Mind Maps
+                    </h2>
+                    <div id="recentMindMaps" class="space-y-2">
+                        <div class="text-center text-gray-500 dark:text-gray-400 py-4">
+                            <i class="fas fa-spinner fa-spin text-2xl mb-2"></i>
+                            <p class="text-sm">Loading recent mind maps...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Example Text -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                        <i class="fas fa-lightbulb mr-2 text-primary-600"></i>
+                        Try This Example
+                    </h2>
+                        <div class="space-y-2">
+                            <button 
+                                id="loadExampleBtn" 
+                                class="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 text-sm block"
+                            >
+                                <i class="fas fa-mouse-pointer mr-1"></i>
+                                Load example about Photosynthesis
+                            </button>
+                            <button 
+                                id="testMindmapBtn" 
+                                class="text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 text-sm block"
+                            >
+                                <i class="fas fa-flask mr-1"></i>
+                                Create test mind map
+                            </button>
+                        </div>
+                </div>
+            </div>
+
+            <!-- Mind Map Visualization -->
+            <div class="space-y-6">
+                <!-- Mind Map Container -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                        <i class="fas fa-sitemap mr-2 text-primary-600"></i>
+                        Mind Map Visualization
+                    </h2>
+                    <div 
+                        id="mindmapContainer" 
+                        class="w-full h-96 border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-900 dark:bg-gray-900"
+                    >
+                        <div class="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
+                            <div class="text-center">
+                                <i class="fas fa-project-diagram text-4xl mb-4"></i>
+                                <p>Your mind map will appear here</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Legend -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                        <i class="fas fa-info-circle mr-2 text-primary-600"></i>
+                        Mind Map Legend
+                    </h2>
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-4 h-4 bg-red-600 rounded-lg border-2 border-red-800"></div>
+                            <span class="text-sm text-gray-700 dark:text-gray-300">Central Topic</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="w-4 h-4 bg-blue-600 rounded-lg border-2 border-blue-800"></div>
+                            <span class="text-sm text-gray-700 dark:text-gray-300">Primary Concepts</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="w-4 h-4 bg-green-600 rounded-full border-2 border-green-800"></div>
+                            <span class="text-sm text-gray-700 dark:text-gray-300">Secondary Concepts</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="w-4 h-4 bg-yellow-600 transform rotate-45 border-2 border-yellow-800"></div>
+                            <span class="text-sm text-gray-700 dark:text-gray-300">Examples & Details</span>
+                        </div>
+                        <div class="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                            <p class="text-xs text-blue-800 dark:text-blue-200">
+                                <i class="fas fa-lightbulb mr-1"></i>
+                                <strong>Tip:</strong> Click on any node to see detailed information and descriptions!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Controls -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                        <i class="fas fa-cogs mr-2 text-primary-600"></i>
+                        Mind Map Controls
+                    </h2>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button 
+                            id="zoomInBtn" 
+                            class="flex items-center justify-center space-x-2 px-3 py-2 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors"
+                        >
+                            <i class="fas fa-search-plus"></i>
+                            <span>Zoom In</span>
+                        </button>
+                        <button 
+                            id="zoomOutBtn" 
+                            class="flex items-center justify-center space-x-2 px-3 py-2 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors"
+                        >
+                            <i class="fas fa-search-minus"></i>
+                            <span>Zoom Out</span>
+                        </button>
+                        <button 
+                            id="fitBtn" 
+                            class="flex items-center justify-center space-x-2 px-3 py-2 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-lg hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors"
+                        >
+                            <i class="fas fa-expand-arrows-alt"></i>
+                            <span>Fit to Screen</span>
+                        </button>
+                        <button 
+                            id="downloadBtn" 
+                            class="flex items-center justify-center space-x-2 px-3 py-2 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-lg hover:bg-purple-200 dark:hover:bg-purple-900/50 transition-colors"
+                        >
+                            <i class="fas fa-download"></i>
+                            <span>Download</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div id="loadingIndicator" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white dark:bg-gray-800 rounded-lg p-6 flex items-center space-x-3">
+                <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-600"></div>
+                <span class="text-gray-600 dark:text-gray-300">Generating mind map...</span>
+            </div>
+        </div>
+
+        <!-- Error Display -->
+        <div id="errorDisplay" class="hidden fixed top-4 right-4 z-50 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 max-w-md">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-exclamation-triangle text-red-600 dark:text-red-400"></i>
+                <span class="text-red-800 dark:text-red-200 font-medium">Error</span>
+            </div>
+            <p id="errorMessage" class="text-red-700 dark:text-red-300 mt-1"></p>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div class="text-center text-gray-600 dark:text-gray-400">
+                <p>&copy; 2024 Study Helper. Built with ❤️ for students everywhere.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="common.js"></script>
+    <script src="mindmap.js"></script>
+</body>
+</html>

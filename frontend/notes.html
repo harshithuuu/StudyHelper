@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Notes - Study Helper</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <!-- Navigation -->
+    <div id="navbar-container"></div>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                <i class="fas fa-save text-primary-600 mr-3"></i>
+                My Notes
+            </h1>
+            <p class="text-gray-600 dark:text-gray-400">View, manage, and organize all your saved notes and study materials.</p>
+        </div>
+
+        <!-- Filters and Search -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
+                <div class="flex flex-col md:flex-row md:items-center space-y-3 md:space-y-0 md:space-x-4">
+                    <!-- Search -->
+                    <div class="relative">
+                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        <input 
+                            type="text" 
+                            id="searchInput" 
+                            placeholder="Search notes..."
+                            class="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                        >
+                    </div>
+                    
+                    <!-- Type Filter -->
+                    <select 
+                        id="typeFilter" 
+                        class="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    >
+                        <option value="">All Types</option>
+                        <option value="summary">Summaries</option>
+                        <option value="translation">Translations</option>
+                        <option value="notes">Revision Notes</option>
+                        <option value="mindmap">Mind Maps</option>
+                    </select>
+                </div>
+                
+                <!-- Actions -->
+                <div class="flex items-center space-x-3">
+                    <button 
+                        id="refreshNotesBtn" 
+                        class="flex items-center space-x-2 px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                    >
+                        <i class="fas fa-refresh"></i>
+                        <span>Refresh</span>
+                    </button>
+                    <button 
+                        id="exportNotesBtn" 
+                        class="flex items-center space-x-2 px-3 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors"
+                    >
+                        <i class="fas fa-download"></i>
+                        <span>Export All</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notes Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="notesGrid" style="word-wrap: break-word; overflow-wrap: break-word;">
+            <!-- Notes will be loaded here -->
+            <div class="col-span-full text-center text-gray-500 dark:text-gray-400 py-12">
+                <i class="fas fa-inbox text-4xl mb-4"></i>
+                <p class="text-lg">Loading your notes...</p>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="hidden text-center text-gray-500 dark:text-gray-400 py-12">
+            <i class="fas fa-inbox text-4xl mb-4"></i>
+            <p class="text-lg mb-2">No notes found</p>
+            <p class="text-sm">Create some notes using the AI features to see them here!</p>
+        </div>
+
+        <!-- Note Detail Modal -->
+        <div id="noteModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+                <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white" id="modalTitle">
+                        Note Details
+                    </h3>
+                    <button 
+                        id="closeModalBtn" 
+                        class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                    >
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <div class="p-6 overflow-y-auto max-h-[60vh] bg-gray-900 dark:bg-gray-900">
+                    <div id="modalContent" class="prose dark:prose-invert max-w-none text-white">
+                        <!-- Note content will be loaded here -->
+                    </div>
+                </div>
+                
+                <div class="flex items-center justify-between p-6 border-t border-gray-200 dark:border-gray-700">
+                    <div class="flex items-center space-x-3">
+                        <span id="modalType" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"></span>
+                        <span id="modalDate" class="text-sm text-gray-500 dark:text-gray-400"></span>
+                    </div>
+                    
+                    <div class="flex items-center space-x-3">
+                        <button 
+                            id="copyNoteBtn" 
+                            class="flex items-center space-x-2 px-3 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                        >
+                            <i class="fas fa-copy"></i>
+                            <span>Copy</span>
+                        </button>
+                        <button 
+                            id="deleteNoteBtn" 
+                            class="flex items-center space-x-2 px-3 py-2 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 rounded-lg hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors"
+                        >
+                            <i class="fas fa-trash"></i>
+                            <span>Delete</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div class="text-center text-gray-600 dark:text-gray-400">
+                <p>&copy; 2024 Study Helper. Built with ❤️ for students everywhere.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="common.js"></script>
+    <script src="notes.js"></script>
+</body>
+</html>

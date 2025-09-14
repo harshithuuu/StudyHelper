@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Summary - Study Helper</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <!-- Navigation -->
+    <div id="navbar-container"></div>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                <i class="fas fa-compress-alt text-primary-600 mr-3"></i>
+                AI Summary
+            </h1>
+            <p class="text-gray-600 dark:text-gray-400">Transform lengthy documents into concise, easy-to-understand summaries using advanced AI technology.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Input Section -->
+            <div class="space-y-6">
+                <!-- Previous Notes Selection -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                        <i class="fas fa-history mr-2 text-primary-600"></i>
+                        Include Previous Notes
+                    </h2>
+                    <div class="mb-4">
+                        <button 
+                            id="loadNotesBtn" 
+                            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors mr-2"
+                        >
+                            <i class="fas fa-folder-open mr-2"></i>
+                            Load My Notes
+                        </button>
+                        <button 
+                            id="clearSelectedNotesBtn" 
+                            class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors"
+                        >
+                            <i class="fas fa-times mr-2"></i>
+                            Clear Selection
+                        </button>
+                    </div>
+                    <div id="selectedNotesContainer" class="space-y-2 max-h-40 overflow-y-auto">
+                        <p class="text-gray-500 dark:text-gray-400 text-sm">No notes selected. Click "Load My Notes" to see your previous notes.</p>
+                    </div>
+                </div>
+
+                <!-- Text Input -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                        <i class="fas fa-edit mr-2 text-primary-600"></i>
+                        Additional Text to Summarize
+                    </h2>
+                    <textarea 
+                        id="textInput" 
+                        placeholder="Add new text here or leave empty to summarize only selected notes..."
+                        class="w-full h-64 p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-none"
+                    ></textarea>
+                </div>
+
+                <!-- URL Input -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                        <i class="fas fa-link mr-2 text-primary-600"></i>
+                        URL (Optional)
+                    </h2>
+                    <input 
+                        type="url" 
+                        id="urlInput" 
+                        placeholder="https://example.com/article"
+                        class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                    >
+                </div>
+
+                <!-- Summary Depth -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                        <i class="fas fa-layer-group mr-2 text-primary-600"></i>
+                        Summary Depth
+                    </h2>
+                    <div class="space-y-3">
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input type="radio" name="depth" value="brief" class="text-primary-600 focus:ring-primary-500" checked>
+                            <div>
+                                <div class="text-sm font-medium text-gray-900 dark:text-white">Brief Summary</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400">Key points only, 1-2 paragraphs</div>
+                            </div>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input type="radio" name="depth" value="detailed" class="text-primary-600 focus:ring-primary-500">
+                            <div>
+                                <div class="text-sm font-medium text-gray-900 dark:text-white">Detailed Summary</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400">Comprehensive overview, 3-5 paragraphs</div>
+                            </div>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer">
+                            <input type="radio" name="depth" value="comprehensive" class="text-primary-600 focus:ring-primary-500">
+                            <div>
+                                <div class="text-sm font-medium text-gray-900 dark:text-white">Comprehensive Summary</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400">In-depth analysis, 5+ paragraphs with examples</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                        <i class="fas fa-magic mr-2 text-primary-600"></i>
+                        Generate Summary
+                    </h2>
+                    <div class="space-y-3">
+                        <button 
+                            id="generateSummaryBtn" 
+                            class="w-full flex items-center justify-center space-x-2 px-4 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <i class="fas fa-compress-alt"></i>
+                            <span>Generate Summary</span>
+                        </button>
+                        <button 
+                            id="clearSummaryBtn" 
+                            class="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                        >
+                            <i class="fas fa-trash"></i>
+                            <span>Clear</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Example Text -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                        <i class="fas fa-lightbulb mr-2 text-primary-600"></i>
+                        Try This Example
+                    </h2>
+                    <button 
+                        id="loadExampleBtn" 
+                        class="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 text-sm"
+                    >
+                        <i class="fas fa-mouse-pointer mr-1"></i>
+                        Load example about Machine Learning
+                    </button>
+                </div>
+            </div>
+
+            <!-- Summary Output -->
+            <div class="space-y-6">
+                <!-- Summary Results -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+                            <i class="fas fa-file-alt mr-2 text-primary-600"></i>
+                            AI Summary
+                        </h2>
+                        <div class="flex items-center space-x-2">
+                            <button 
+                                id="decreaseTextSizeBtn" 
+                                class="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded text-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                                title="Decrease text size"
+                            >
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <span id="textSizeDisplay" class="text-sm text-gray-600 dark:text-gray-400 px-2">Normal</span>
+                            <button 
+                                id="increaseTextSizeBtn" 
+                                class="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded text-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                                title="Increase text size"
+                            >
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button 
+                                id="resetTextSizeBtn" 
+                                class="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded text-sm hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors"
+                                title="Reset text size"
+                            >
+                                <i class="fas fa-undo"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div 
+                        id="summaryResults" 
+                        class="w-full h-96 border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-900 dark:bg-gray-900 p-4 overflow-y-auto"
+                    >
+                        <div class="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
+                            <div class="text-center">
+                                <i class="fas fa-compress-alt text-4xl mb-4"></i>
+                                <p>Your summary will appear here</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                        <i class="fas fa-cogs mr-2 text-primary-600"></i>
+                        Actions
+                    </h2>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button 
+                            id="saveSummaryBtn" 
+                            class="flex items-center justify-center space-x-2 px-3 py-2 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-lg hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors"
+                        >
+                            <i class="fas fa-save"></i>
+                            <span>Save Summary</span>
+                        </button>
+                        <button 
+                            id="downloadSummaryBtn" 
+                            class="flex items-center justify-center space-x-2 px-3 py-2 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-lg hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors"
+                        >
+                            <i class="fas fa-download"></i>
+                            <span>Download</span>
+                        </button>
+                        <button 
+                            id="copySummaryBtn" 
+                            class="flex items-center justify-center space-x-2 px-3 py-2 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-lg hover:bg-purple-200 dark:hover:bg-purple-900/50 transition-colors"
+                        >
+                            <i class="fas fa-copy"></i>
+                            <span>Copy</span>
+                        </button>
+                        <button 
+                            id="createMindMapBtn" 
+                            class="flex items-center justify-center space-x-2 px-3 py-2 bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 rounded-lg hover:bg-orange-200 dark:hover:bg-orange-900/50 transition-colors"
+                        >
+                            <i class="fas fa-project-diagram"></i>
+                            <span>Mind Map</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div id="loadingIndicator" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white dark:bg-gray-800 rounded-lg p-6 flex items-center space-x-3">
+                <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-600"></div>
+                <span class="text-gray-600 dark:text-gray-300">Generating summary...</span>
+            </div>
+        </div>
+
+        <!-- Error Display -->
+        <div id="errorDisplay" class="hidden fixed top-4 right-4 z-50 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 max-w-md">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-exclamation-triangle text-red-600 dark:text-red-400"></i>
+                <span class="text-red-800 dark:text-red-200 font-medium">Error</span>
+            </div>
+            <p id="errorMessage" class="text-red-700 dark:text-red-300 mt-1"></p>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div class="text-center text-gray-600 dark:text-gray-400">
+                <p>&copy; 2024 Study Helper. Built with ❤️ for students everywhere.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="common.js"></script>
+    <script src="summary.js"></script>
+</body>
+</html>

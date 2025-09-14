@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload - Study Helper</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <!-- Navigation -->
+    <div id="navbar-container"></div>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                <i class="fas fa-file-upload text-primary-600 mr-3"></i>
+                File Upload & Processing
+            </h1>
+            <p class="text-gray-600 dark:text-gray-400">Upload PDFs and images to extract text and create study materials.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Upload Section -->
+            <div class="space-y-6">
+                <!-- File Upload -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                        <i class="fas fa-cloud-upload-alt mr-2 text-primary-600"></i>
+                        Upload Files
+                    </h2>
+                    
+                    <div 
+                        id="dropZone" 
+                        class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-8 text-center hover:border-primary-500 dark:hover:border-primary-400 transition-colors cursor-pointer"
+                    >
+                        <div id="dropZoneContent">
+                            <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 dark:text-gray-500 mb-4"></i>
+                            <p class="text-lg font-medium text-gray-600 dark:text-gray-400 mb-2">
+                                Drag & drop files here
+                            </p>
+                            <p class="text-sm text-gray-500 dark:text-gray-500 mb-4">
+                                or click to browse
+                            </p>
+                            <input 
+                                type="file" 
+                                id="fileInput" 
+                                accept=".pdf,.jpg,.jpeg,.png,.gif" 
+                                class="hidden"
+                            >
+                            <button 
+                                type="button" 
+                                onclick="document.getElementById('fileInput').click()"
+                                class="inline-flex items-center px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors"
+                            >
+                                <i class="fas fa-folder-open mr-2"></i>
+                                Choose Files
+                            </button>
+                        </div>
+                        
+                        <div id="filePreview" class="hidden">
+                            <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-file text-primary-600"></i>
+                                    <span id="fileName" class="text-gray-900 dark:text-white font-medium"></span>
+                                    <span id="fileSize" class="text-gray-500 dark:text-gray-400 text-sm"></span>
+                                </div>
+                                <button 
+                                    id="removeFileBtn" 
+                                    class="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+                                >
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 text-xs text-gray-500 dark:text-gray-400">
+                        <p><i class="fas fa-info-circle mr-1"></i> Supported formats: PDF, JPG, PNG, GIF</p>
+                        <p><i class="fas fa-weight-hanging mr-1"></i> Maximum file size: 10MB</p>
+                    </div>
+                </div>
+
+                <!-- Processing Options -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                        <i class="fas fa-cogs mr-2 text-primary-600"></i>
+                        Processing Options
+                    </h2>
+                    
+                    <div class="space-y-4">
+                        <label class="flex items-center space-x-3">
+                            <input type="checkbox" id="autoSummarize" class="rounded text-primary-600 focus:ring-primary-500">
+                            <span class="text-gray-700 dark:text-gray-300">Auto-generate summary</span>
+                        </label>
+                        
+                        <label class="flex items-center space-x-3">
+                            <input type="checkbox" id="autoTranslate" class="rounded text-primary-600 focus:ring-primary-500">
+                            <span class="text-gray-700 dark:text-gray-300">Auto-translate to Telugu</span>
+                        </label>
+                        
+                        <label class="flex items-center space-x-3">
+                            <input type="checkbox" id="createMindmap" class="rounded text-primary-600 focus:ring-primary-500">
+                            <span class="text-gray-700 dark:text-gray-300">Create mind map</span>
+                        </label>
+                    </div>
+                    
+                    <button 
+                        id="processFileBtn" 
+                        class="w-full mt-4 flex items-center justify-center space-x-2 px-4 py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled
+                    >
+                        <i class="fas fa-magic"></i>
+                        <span>Process File</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div class="space-y-6">
+                <!-- Extracted Text -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                        <i class="fas fa-file-alt mr-2 text-primary-600"></i>
+                        Extracted Text
+                    </h2>
+                    <div 
+                        id="extractedTextArea" 
+                        class="w-full h-64 p-3 border border-gray-200 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white overflow-y-auto resize-none"
+                        placeholder="Extracted text will appear here..."
+                        readonly
+                    >
+                        <div class="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
+                            <div class="text-center">
+                                <i class="fas fa-file-text text-2xl mb-2"></i>
+                                <p>Extracted text will appear here</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-3 flex justify-between items-center">
+                        <span id="textStats" class="text-sm text-gray-500 dark:text-gray-400"></span>
+                        <button 
+                            id="copyTextBtn" 
+                            class="text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 text-sm"
+                        >
+                            <i class="fas fa-copy mr-1"></i>Copy Text
+                        </button>
+                    </div>
+                </div>
+
+                <!-- AI Processing Results -->
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                        <i class="fas fa-robot mr-2 text-primary-600"></i>
+                        AI Processing Results
+                    </h2>
+                    
+                    <div id="aiResults" class="space-y-4">
+                        <div class="text-center text-gray-500 dark:text-gray-400 py-8">
+                            <i class="fas fa-magic text-2xl mb-2"></i>
+                            <p>AI processing results will appear here</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div id="loadingIndicator" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div class="bg-white dark:bg-gray-800 rounded-lg p-6 flex items-center space-x-3">
+                <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-primary-600"></div>
+                <span class="text-gray-600 dark:text-gray-300">Processing file...</span>
+            </div>
+        </div>
+
+        <!-- Error Display -->
+        <div id="errorDisplay" class="hidden fixed top-4 right-4 z-50 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 max-w-md">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-exclamation-triangle text-red-600 dark:text-red-400"></i>
+                <span class="text-red-800 dark:text-red-200 font-medium">Error</span>
+            </div>
+            <p id="errorMessage" class="text-red-700 dark:text-red-300 mt-1"></p>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div class="text-center text-gray-600 dark:text-gray-400">
+                <p>&copy; 2024 Study Helper. Built with ❤️ for students everywhere.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="common.js"></script>
+    <script src="files.js"></script>
+</body>
+</html>

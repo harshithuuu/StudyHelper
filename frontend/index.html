@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Helper - AI-Powered Study Companion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    <!-- Navigation -->
+    <div id="navbar-container"></div>
+
+    <!-- Hero Section -->
+    <section class="relative bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <h1 class="text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
+                    <span class="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                        Study Helper
+                    </span>
+                </h1>
+                <p class="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
+                    Your AI-powered study companion. Transform complex topics into clear summaries, 
+                    break language barriers, and create visual mind maps that make learning effortless.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="#features" class="inline-flex items-center px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors shadow-lg hover:shadow-xl">
+                        <i class="fas fa-rocket mr-2"></i>
+                        Get Started
+                    </a>
+                    <a href="notes.html" class="inline-flex items-center px-8 py-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-semibold rounded-lg border-2 border-gray-300 dark:border-gray-600 hover:border-blue-500 transition-colors shadow-lg hover:shadow-xl">
+                        <i class="fas fa-book mr-2"></i>
+                        View My Notes
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16" id="features">
+        <!-- Features Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+            <!-- AI Summary -->
+            <div class="group bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-8 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                <div class="flex items-center mb-6">
+                    <div class="p-4 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl group-hover:scale-110 transition-transform duration-300">
+                        <i class="fas fa-compress-alt text-white text-2xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white">AI Summary</h3>
+                        <p class="text-gray-600 dark:text-gray-400">Smart text summarization</p>
+                    </div>
+                </div>
+                <p class="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
+                    Transform lengthy documents into concise, easy-to-understand summaries using advanced AI technology.
+                </p>
+                <a href="summary.html" class="inline-flex items-center text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-semibold group-hover:translate-x-2 transition-transform duration-300">
+                    Try it now <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+
+            <!-- Translation -->
+            <div class="group bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-8 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                <div class="flex items-center mb-6">
+                    <div class="p-4 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl group-hover:scale-110 transition-transform duration-300">
+                        <i class="fas fa-language text-white text-2xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Translation</h3>
+                        <p class="text-gray-600 dark:text-gray-400">Multi-language support</p>
+                    </div>
+                </div>
+                <p class="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
+                    Break language barriers with instant, accurate translations across multiple languages.
+                </p>
+                <a href="translation.html" class="inline-flex items-center text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 font-semibold group-hover:translate-x-2 transition-transform duration-300">
+                    Try it now <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+
+            <!-- Mind Maps -->
+            <div class="group bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-8 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                <div class="flex items-center mb-6">
+                    <div class="p-4 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl group-hover:scale-110 transition-transform duration-300">
+                        <i class="fas fa-project-diagram text-white text-2xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Mind Maps</h3>
+                        <p class="text-gray-600 dark:text-gray-400">Visual learning</p>
+                    </div>
+                </div>
+                <p class="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
+                    Create interactive, educational mind maps that make complex topics easy to understand and remember.
+                </p>
+                <a href="mindmap.html" class="inline-flex items-center text-orange-600 hover:text-orange-700 dark:text-orange-400 dark:hover:text-orange-300 font-semibold group-hover:translate-x-2 transition-transform duration-300">
+                    Try it now <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+
+            <!-- Research Assistant -->
+            <div class="group bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-8 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                <div class="flex items-center mb-6">
+                    <div class="p-4 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl group-hover:scale-110 transition-transform duration-300">
+                        <i class="fas fa-search text-white text-2xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Research Assistant</h3>
+                        <p class="text-gray-600 dark:text-gray-400">Web research & YouTube</p>
+                    </div>
+                </div>
+                <p class="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
+                    Gather comprehensive information from the web and summarize YouTube videos for any educational topic.
+                </p>
+                <a href="research.html" class="inline-flex items-center text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 font-semibold group-hover:translate-x-2 transition-transform duration-300">
+                    Try it now <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 mb-16 text-white">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div>
+                    <div class="text-4xl font-bold mb-2">100%</div>
+                    <div class="text-blue-100">AI-Powered</div>
+                </div>
+                <div>
+                    <div class="text-4xl font-bold mb-2">24/7</div>
+                    <div class="text-blue-100">Available</div>
+                </div>
+                <div>
+                    <div class="text-4xl font-bold mb-2">∞</div>
+                    <div class="text-blue-100">Possibilities</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Why Choose Us Section -->
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">Why Choose Study Helper?</h2>
+            <p class="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+                We combine cutting-edge AI technology with user-friendly design to make your study experience effortless and effective.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="text-center group">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-2xl mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <i class="fas fa-brain text-blue-600 dark:text-blue-400 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">AI-Powered</h3>
+                <p class="text-gray-600 dark:text-gray-400">Advanced AI technology for accurate and intelligent processing.</p>
+            </div>
+            <div class="text-center group">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-2xl mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <i class="fas fa-bolt text-green-600 dark:text-green-400 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Lightning Fast</h3>
+                <p class="text-gray-600 dark:text-gray-400">Get results in seconds, not minutes. Save time for studying.</p>
+            </div>
+            <div class="text-center group">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-purple-100 dark:bg-purple-900/30 rounded-2xl mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <i class="fas fa-shield-alt text-purple-600 dark:text-purple-400 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Secure & Private</h3>
+                <p class="text-gray-600 dark:text-gray-400">Your data is safe and secure. We respect your privacy.</p>
+            </div>
+            <div class="text-center group">
+                <div class="inline-flex items-center justify-center w-16 h-16 bg-orange-100 dark:bg-orange-900/30 rounded-2xl mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <i class="fas fa-heart text-orange-600 dark:text-orange-400 text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Made for Students</h3>
+                <p class="text-gray-600 dark:text-gray-400">Designed by students, for students. We understand your needs.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div class="text-center text-gray-600 dark:text-gray-400">
+                <p>&copy; 2024 Study Helper. Built with ❤️ for students everywhere.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="common.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
