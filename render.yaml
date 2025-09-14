@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: study-helper-backend
+    name: dynemite-study-helper
     env: node
     plan: free
     buildCommand: npm install
@@ -16,3 +16,4 @@ services:
         value: your_gemini_api_key_here
     healthCheckPath: /api/health
     autoDeploy: true
+    region: oregon
