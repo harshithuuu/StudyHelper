@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Study & Preparation Helper
 
 A comprehensive web application that helps students and learners by providing AI-powered summarization, translation, and revision note generation capabilities.
@@ -249,3 +250,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ---
 
 Built with ❤️ for students everywhere. Happy studying! 📚
+=======
+# StudyHelper
+A comprehensive study assistant featuring AI-powered summarization with note memory, interactive mind maps with dark theme, multi-language translation, web research with depth control, YouTube video summary &amp; it provides students with tools to organize, summarize, and visualize educational content while maintaining context across study sessions.
+>>>>>>> 68ee83f22b1e7b3fdd4a1ac0a8cbebe5c20a2330
