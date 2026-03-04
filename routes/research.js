@@ -8,7 +8,7 @@ const router = express.Router();
 
 // Initialize Google AI
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-native-audio-preview-12-2025" });
 
 // Research endpoint
 router.post('/', async (req, res) => {
