@@ -6,7 +6,7 @@ const router = express.Router();
 
 // Initialize Gemini AI
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-native-audio-preview-12-2025" });
 
 // Summarize text using Gemini
 router.post('/summarize', async (req, res) => {
